@@ -71,11 +71,15 @@ if st.session_state.data:
     df = pd.DataFrame(st.session_state.data)
     st.dataframe(df)
 
-# Exportar los datos a CSV con un separador adecuado
-st.download_button(
-    label="Descargar archivo CSV",
-    data=df.to_csv(index=False, sep=';', encoding='utf-8').encode('utf-8'),
-    file_name="catastro_luminarias.csv",
-    mime="text/csv",
-)
+    # Exportar los datos a CSV solo si hay datos
+    csv_data = df.to_csv(index=False, sep=';', encoding='utf-8').encode('utf-8')
+    st.download_button(
+        label="Descargar archivo CSV",
+        data=csv_data,
+        file_name="catastro_luminarias.csv",
+        mime="text/csv",
+    )
+else:
+    st.info("No hay datos ingresados para exportar.")
+
 

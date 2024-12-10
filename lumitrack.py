@@ -71,10 +71,11 @@ if st.session_state.data:
     df = pd.DataFrame(st.session_state.data)
     st.dataframe(df)
 
-    # Exportar los datos a CSV
-    st.download_button(
-        label="Descargar archivo CSV",
-        data=df.to_csv(index=False).encode('utf-8'),
-        file_name="catastro_luminarias.csv",
-        mime="text/csv",
-    )
+# Exportar los datos a CSV con un separador adecuado
+st.download_button(
+    label="Descargar archivo CSV",
+    data=df.to_csv(index=False, sep=';', encoding='utf-8').encode('utf-8'),
+    file_name="catastro_luminarias.csv",
+    mime="text/csv",
+)
+

@@ -29,3 +29,11 @@ Para instalar las dependencias necesarias, ejecuta el siguiente comando en la te
 pip install -r requirements.txt
 
 
+Uso
+Clona este repositorio en tu máquina local:
+git clone <URL-del-repositorio>
+cd lumitrack
+Instala las dependencias necesarias:
+pip install -r requirements.txt
+Ejecuta la aplicación:
+streamlit run lumitrack.py

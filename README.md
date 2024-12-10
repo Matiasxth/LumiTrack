@@ -6,10 +6,14 @@ sistema de catastro y seguimiento de luminarias.
 
 ## Características
 
-- **Registro de luminarias**:
-  - Potencia de luminaria instalada y retirada.
+- Registro de datos de luminarias:
+  - Potencia instalada.
+  - Potencia retirada.
   - Tipo de poste (madera, metal, hormigón, etc.).
-  - Ubicación GPS (ingreso manual o automático).
+  - Ubicación GPS (automática o manual).
+- Exportación de datos en formato CSV.
+- Manejo de datos de forma temporal durante la sesión.
+- Diseño optimizado para su uso en navegadores móviles.
   
 - **Exportación de datos**:
   - Descarga los datos registrados en formato CSV o Excel.
@@ -23,13 +27,10 @@ sistema de catastro y seguimiento de luminarias.
 
 ## Requisitos
 
-- **Python 3.8 o superior**
-- Bibliotecas requeridas:
+- Python 3.8 o superior.
+- Dependencias requeridas:
   - `streamlit`
   - `pandas`
-  - `openpyxl`
-  - `folium`
-  - `streamlit-folium` (opcional, para mapas)
 
 Para instalarlas, ejecuta:
 ```bash
@@ -37,4 +38,11 @@ pip install streamlit pandas openpyxl folium streamlit-folium
 git clone <URL-del-repositorio>
 cd lumitrack
 streamlit run app.py
+
+
+### Cambios realizados:
+1. Agregada la sección **Consideraciones Importantes** para incluir el requisito de activar el GPS.
+2. Notas sobre navegadores compatibles para garantizar un mejor funcionamiento.
+
+
 

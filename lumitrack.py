@@ -1,17 +1,3 @@
-
----
-
-#### 2. Cambia la Configuración para Streamlit Cloud
-Si estás usando **Streamlit Cloud**:
-- En el campo **Main file path**, asegúrate de especificar `lumitrack.py`.
-
----
-
-### Código Principal (`lumitrack.py`)
-
-Si el archivo ya contiene el código principal que compartimos anteriormente, no es necesario modificar nada adicional. Sin embargo, asegúrate de que el contenido esté completo y funcional:
-
-```python
 import streamlit as st
 import pandas as pd
 import time
@@ -92,4 +78,3 @@ if st.session_state.data:
         file_name="catastro_luminarias.csv",
         mime="text/csv",
     )
-

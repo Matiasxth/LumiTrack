@@ -1,38 +1,54 @@
 import streamlit as st
 import pandas as pd
-from streamlit_javascript import st_javascript
+import time
 
 # Configuración inicial
 st.title("LumiTrack: Catastro de Luminarias")
 st.write("Registra datos de luminarias, como potencia, tipo de poste y ubicación GPS.")
 
-# Variable para almacenar la ubicación GPS actual
+# Almacenamiento de la ubicación GPS
 if "gps_location" not in st.session_state:
     st.session_state.gps_location = "Ubicación no disponible"
 
-# Botón para refrescar la ubicación GPS
-if st.button("Refrescar ubicación GPS"):
-    coords = st_javascript(
-        code="""
+# Función para capturar las coordenadas GPS desde el navegador
+def get_gps_coordinates():
+    gps_script = """
+    <script>
+    const gpsButton = document.getElementById("gps-refresh");
+    gpsButton.addEventListener("click", () => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
                 const coords = `${latitude}, ${longitude}`;
-                document.dispatchEvent(new CustomEvent("streamlit:setComponentValue", {detail: coords}));
+                const inputField = document.getElementById("gps-coords");
+                inputField.value = coords;
+                inputField.dispatchEvent(new Event('input'));
             },
             (error) => {
                 const errorMessage = "Permiso denegado o no disponible.";
-                document.dispatchEvent(new CustomEvent("streamlit:setComponentValue", {detail: errorMessage}));
+                const inputField = document.getElementById("gps-coords");
+                inputField.value = errorMessage;
+                inputField.dispatchEvent(new Event('input'));
             }
         );
-        """
-    )
-    st.session_state.gps_location = coords
+    });
+    </script>
+    """
+    return gps_script
 
-# Mostrar la ubicación GPS actual
-st.write("### Ubicación GPS Actual:")
-st.write(st.session_state.gps_location)
+# HTML para la integración de JavaScript
+st.components.v1.html(
+    f"""
+    <button id="gps-refresh" style="padding: 10px; margin-bottom: 10px;">Refrescar ubicación GPS</button>
+    <input type="text" id="gps-coords" readonly style="width: 100%; padding: 8px;" value="{st.session_state.gps_location}">
+    {get_gps_coordinates()}
+    """,
+    height=100,
+)
+
+# Captura de la entrada manual del GPS
+st.session_state.gps_location = st.text_input("Ubicación GPS (automática o manual)", st.session_state.gps_location)
 
 # Almacenamiento temporal en la sesión de Streamlit
 if "data" not in st.session_state:
@@ -43,13 +59,13 @@ with st.form("catastro_form"):
     potencia_instalada = st.number_input("Potencia Luminaria Instalada (W)", min_value=0, step=1)
     potencia_retirada = st.number_input("Potencia Luminaria Retirada (W)", min_value=0, step=1)
     tipo_poste = st.selectbox("Tipo de Poste", ["Madera", "Metal", "Hormigón", "Otro"])
-    ubicacion_gps = st.text_input("Ubicación GPS (automática o manual)", st.session_state.gps_location)
+    ubicacion_gps = st.text_input("Ubicación GPS", st.session_state.gps_location)
     submit_button = st.form_submit_button("Agregar")
 
     if submit_button:
         if "Permiso denegado" not in ubicacion_gps and ubicacion_gps:
             st.session_state.data.append({
-                "Fecha y Hora": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "Fecha y Hora": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "Potencia Instalada (W)": potencia_instalada,
                 "Potencia Retirada (W)": potencia_retirada,
                 "Tipo de Poste": tipo_poste,

@@ -40,9 +40,4 @@ cd lumitrack
 streamlit run app.py
 
 
-### Cambios realizados:
-1. Agregada la sección **Consideraciones Importantes** para incluir el requisito de activar el GPS.
-2. Notas sobre navegadores compatibles para garantizar un mejor funcionamiento.
-
-
 

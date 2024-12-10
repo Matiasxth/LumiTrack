@@ -10,7 +10,7 @@ st.write("Registra datos de luminarias, como potencia, tipo de poste y ubicació
 if "gps_location" not in st.session_state:
     st.session_state.gps_location = "Ubicación no disponible"
 
-# Función para obtener las coordenadas GPS desde el navegador
+# Función para capturar las coordenadas GPS desde el navegador
 def refresh_gps():
     gps_script = """
     <script>
@@ -19,19 +19,10 @@ def refresh_gps():
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
             const coords = `${latitude}, ${longitude}`;
-            document.getElementById("gps-coords").value = coords;
             Streamlit.setComponentValue(coords);
         },
         (error) => {
             let errorMessage = "Permiso denegado o no disponible.";
-            if (error.code === 1) {
-                errorMessage = "Acceso a la ubicación denegado por el usuario.";
-            } else if (error.code === 2) {
-                errorMessage = "Ubicación no disponible.";
-            } else if (error.code === 3) {
-                errorMessage = "La solicitud de ubicación expiró.";
-            }
-            document.getElementById("gps-coords").value = errorMessage;
             Streamlit.setComponentValue(errorMessage);
         }
     );
@@ -40,9 +31,8 @@ def refresh_gps():
     coords = st.components.v1.html(
         f"""
         {gps_script}
-        <input type="text" id="gps-coords" style="width: 100%; padding: 8px;" readonly>
         """,
-        height=50,
+        height=0,
     )
     return coords
 

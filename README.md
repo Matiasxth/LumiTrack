@@ -31,7 +31,7 @@ pip install -r requirements.txt
 
 Uso
 Clona este repositorio en tu máquina local:
-git clone <URL-del-repositorio>
+git clone <URL-https://github.com/Matiasxth/LumiTrack.git)](https://github.com/Matiasxth/LumiTrack.git)>
 cd lumitrack
 Instala las dependencias necesarias:
 pip install -r requirements.txt

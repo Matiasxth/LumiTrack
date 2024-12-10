@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import time
+from streamlit_javascript import st_javascript
 
 # Configuración inicial
 st.title("LumiTrack: Catastro de Luminarias")
@@ -10,35 +10,25 @@ st.write("Registra datos de luminarias, como potencia, tipo de poste y ubicació
 if "gps_location" not in st.session_state:
     st.session_state.gps_location = "Ubicación no disponible"
 
-# Función para capturar las coordenadas GPS desde el navegador
-def refresh_gps():
-    gps_script = """
-    <script>
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            const coords = `${latitude}, ${longitude}`;
-            Streamlit.setComponentValue(coords);
-        },
-        (error) => {
-            let errorMessage = "Permiso denegado o no disponible.";
-            Streamlit.setComponentValue(errorMessage);
-        }
-    );
-    </script>
-    """
-    coords = st.components.v1.html(
-        f"""
-        {gps_script}
-        """,
-        height=0,
-    )
-    return coords
-
 # Botón para refrescar la ubicación GPS
 if st.button("Refrescar ubicación GPS"):
-    st.session_state.gps_location = refresh_gps()
+    coords = st_javascript(
+        code="""
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                const coords = `${latitude}, ${longitude}`;
+                document.dispatchEvent(new CustomEvent("streamlit:setComponentValue", {detail: coords}));
+            },
+            (error) => {
+                const errorMessage = "Permiso denegado o no disponible.";
+                document.dispatchEvent(new CustomEvent("streamlit:setComponentValue", {detail: errorMessage}));
+            }
+        );
+        """
+    )
+    st.session_state.gps_location = coords
 
 # Mostrar la ubicación GPS actual
 st.write("### Ubicación GPS Actual:")
@@ -59,7 +49,7 @@ with st.form("catastro_form"):
     if submit_button:
         if "Permiso denegado" not in ubicacion_gps and ubicacion_gps:
             st.session_state.data.append({
-                "Fecha y Hora": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "Fecha y Hora": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "Potencia Instalada (W)": potencia_instalada,
                 "Potencia Retirada (W)": potencia_retirada,
                 "Tipo de Poste": tipo_poste,

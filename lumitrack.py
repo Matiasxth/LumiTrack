@@ -6,8 +6,12 @@ import time
 st.title("LumiTrack: Catastro de Luminarias")
 st.write("Registra datos de luminarias, como potencia, tipo de poste y ubicación GPS.")
 
+# Variable para almacenar la ubicación GPS actual
+if "gps_location" not in st.session_state:
+    st.session_state.gps_location = "Ubicación no disponible"
+
 # Función para obtener las coordenadas GPS desde el navegador
-def get_gps_coordinates():
+def refresh_gps():
     gps_script = """
     <script>
     navigator.geolocation.getCurrentPosition(
@@ -16,6 +20,7 @@ def get_gps_coordinates():
             const longitude = position.coords.longitude;
             const coords = `${latitude}, ${longitude}`;
             document.getElementById("gps-coords").value = coords;
+            Streamlit.setComponentValue(coords);
         },
         (error) => {
             let errorMessage = "Permiso denegado o no disponible.";
@@ -27,18 +32,27 @@ def get_gps_coordinates():
                 errorMessage = "La solicitud de ubicación expiró.";
             }
             document.getElementById("gps-coords").value = errorMessage;
+            Streamlit.setComponentValue(errorMessage);
         }
     );
     </script>
     """
-    st.components.v1.html(
+    coords = st.components.v1.html(
         f"""
         {gps_script}
         <input type="text" id="gps-coords" style="width: 100%; padding: 8px;" readonly>
         """,
         height=50,
     )
-    return st.text_input("Ubicación GPS (copiar y pegar desde arriba si no se autocompleta)")
+    return coords
+
+# Botón para refrescar la ubicación GPS
+if st.button("Refrescar ubicación GPS"):
+    st.session_state.gps_location = refresh_gps()
+
+# Mostrar la ubicación GPS actual
+st.write("### Ubicación GPS Actual:")
+st.write(st.session_state.gps_location)
 
 # Almacenamiento temporal en la sesión de Streamlit
 if "data" not in st.session_state:
@@ -49,7 +63,7 @@ with st.form("catastro_form"):
     potencia_instalada = st.number_input("Potencia Luminaria Instalada (W)", min_value=0, step=1)
     potencia_retirada = st.number_input("Potencia Luminaria Retirada (W)", min_value=0, step=1)
     tipo_poste = st.selectbox("Tipo de Poste", ["Madera", "Metal", "Hormigón", "Otro"])
-    ubicacion_gps = get_gps_coordinates()
+    ubicacion_gps = st.text_input("Ubicación GPS (automática o manual)", st.session_state.gps_location)
     submit_button = st.form_submit_button("Agregar")
 
     if submit_button:
@@ -71,7 +85,7 @@ if st.session_state.data:
     df = pd.DataFrame(st.session_state.data)
     st.dataframe(df)
 
-    # Exportar los datos a CSV solo si hay datos
+    # Exportar los datos a CSV
     csv_data = df.to_csv(index=False, sep=';', encoding='utf-8').encode('utf-8')
     st.download_button(
         label="Descargar archivo CSV",
@@ -81,5 +95,3 @@ if st.session_state.data:
     )
 else:
     st.info("No hay datos ingresados para exportar.")
-
-

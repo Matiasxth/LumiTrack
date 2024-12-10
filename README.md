@@ -1,43 +1,31 @@
 # LumiTrack
-sistema de catastro y seguimiento de luminarias.
-# LumiTrack
 
-**LumiTrack** es una aplicación interactiva desarrollada con Python y Streamlit para el catastro de luminarias. Permite registrar datos como potencia de luminarias instaladas y retiradas, tipo de poste, y ubicación GPS, almacenándolos en un archivo descargable. Este software está diseñado para garantizar la gestión eficiente de puntos de iluminación.
+**LumiTrack** es una aplicación interactiva desarrollada con Python y Streamlit para el catastro de luminarias. Esta herramienta permite registrar datos clave, como potencia de luminarias instaladas y retiradas, tipo de poste y ubicación GPS. Los datos recopilados pueden descargarse en formato CSV para un análisis posterior.
 
 ## Características
 
-- Registro de datos de luminarias:
+- **Registro de datos**:
   - Potencia instalada.
   - Potencia retirada.
   - Tipo de poste (madera, metal, hormigón, etc.).
   - Ubicación GPS (automática o manual).
-- Exportación de datos en formato CSV.
-- Manejo de datos de forma temporal durante la sesión.
-- Diseño optimizado para su uso en navegadores móviles.
-  
+
 - **Exportación de datos**:
-  - Descarga los datos registrados en formato CSV o Excel.
+  - Los datos registrados pueden descargarse en formato CSV con columnas correctamente separadas.
 
-- **Visualización interactiva**:
-  - Tabla con todos los puntos registrados durante la sesión.
-  - Mapa interactivo para mostrar las ubicaciones.
-
-- **Privacidad**:
-  - Los datos ingresados no se almacenan permanentemente en el servidor ni en el repositorio.
+- **Diseño optimizado**:
+  - Funciona en navegadores de escritorio y móviles.
+  - Interfaz fácil de usar para técnicos en terreno.
 
 ## Requisitos
 
-- Python 3.8 o superior.
-- Dependencias requeridas:
+- **Python**: Versión 3.8 o superior.
+- **Bibliotecas necesarias**:
   - `streamlit`
   - `pandas`
 
-Para instalarlas, ejecuta:
+Para instalar las dependencias necesarias, ejecuta el siguiente comando en la terminal:
 ```bash
-pip install streamlit pandas openpyxl folium streamlit-folium
-git clone <URL-del-repositorio>
-cd lumitrack
-streamlit run app.py
-
+pip install -r requirements.txt
 
 
